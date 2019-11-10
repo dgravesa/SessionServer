@@ -1,9 +1,6 @@
 package model
 
 import (
-	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,17 +10,6 @@ import (
 type Session struct {
 	UserID uint64 `json:"userId"`
 	Key    string `json:"key"`
-}
-
-func keygen() string {
-	keyBytes := make([]byte, sha256.Size)
-	rand.Read(keyBytes)
-	return hex.EncodeToString(keyBytes)
-}
-
-func keycheck(s string) bool {
-	_, err := hex.DecodeString(s)
-	return err == nil
 }
 
 // NewSession creates a user session with a randomly generated key.
