@@ -2,12 +2,13 @@ package model
 
 import (
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/hex"
 )
 
+const keyLength = 32
+
 func keygen() string {
-	keyBytes := make([]byte, sha256.Size)
+	keyBytes := make([]byte, keyLength)
 	rand.Read(keyBytes)
 	return hex.EncodeToString(keyBytes)
 }
