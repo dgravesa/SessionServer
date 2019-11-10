@@ -41,7 +41,6 @@ func ParseSession(r io.Reader) (*Session, error) {
 	return session, err
 }
 
-// DecodeJSON deserializes a JSON form of session and returns error if a field is invalid or not present
 func decodeSessionJSON(r io.Reader, s *Session) error {
 	var nillable struct {
 		UserID *uint64 `json:"userId"`
