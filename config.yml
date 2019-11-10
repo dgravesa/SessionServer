@@ -1,0 +1,4 @@
+username: "postgres"
+passkey: "D:\\data\\config\\pgpass.txt"
+hostname: "localhost"
+port: 5432
