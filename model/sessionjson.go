@@ -13,8 +13,8 @@ type SessionJSON struct {
 }
 
 // MakeSessionJSON creates a new SessionJSON from a Session.
-func MakeSessionJSON(s Session) *SessionJSON {
-	sj := new(SessionJSON)
+func MakeSessionJSON(s Session) SessionJSON {
+	var sj SessionJSON
 	sj.FromSession(s)
 	return sj
 }
@@ -34,14 +34,14 @@ func (sj *SessionJSON) FromSession(s Session) {
 	sj.Key = s.Key
 }
 
-// Encode writes the SessionJSON data in JSON format.
-func (sj SessionJSON) Encode(w io.Writer) error {
+// EncodeTo writes the SessionJSON data in JSON format to a Writer.
+func (sj SessionJSON) EncodeTo(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(sj)
 }
 
-// Decode reads a SessionJSON from a JSON formatted stream.
-func (sj *SessionJSON) Decode(r io.Reader) error {
+// DecodeFrom gets the SessionJSON data from a Reader.
+func (sj *SessionJSON) DecodeFrom(r io.Reader) error {
 	var nillable struct {
 		UserID *uint64 `json:"userId"`
 		Key    *string `json:"key"`

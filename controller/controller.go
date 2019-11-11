@@ -44,8 +44,8 @@ func postSession(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 
-	sessionJSON := model.MakeSessionJSON(*session)
-	sessionJSON.Encode(w)
+	sessionJSON := model.MakeSessionJSON(session)
+	sessionJSON.EncodeTo(w)
 }
 
 func deleteSession(w http.ResponseWriter, r *http.Request) {
@@ -66,8 +66,8 @@ type sessionValidResponse struct {
 	Valid bool `json:"isValid"`
 }
 
-func makeSessionValidResponse(session *model.Session) *sessionValidResponse {
-	return &sessionValidResponse{
+func makeSessionValidResponse(session model.Session) sessionValidResponse {
+	return sessionValidResponse{
 		Valid: model.IsValid(session),
 	}
 }
