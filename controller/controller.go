@@ -43,8 +43,9 @@ func postSession(w http.ResponseWriter, r *http.Request) {
 	model.AddSession(session)
 
 	w.WriteHeader(http.StatusCreated)
-	encoder := json.NewEncoder(w)
-	encoder.Encode(session)
+
+	sessionJSON := model.MakeSessionJSON(*session)
+	sessionJSON.Encode(w)
 }
 
 func deleteSession(w http.ResponseWriter, r *http.Request) {
