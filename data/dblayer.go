@@ -1,7 +1,9 @@
 package data
 
 import (
+	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 
 	"bitbucket.org/dangravesteam/WaterLogger/SessionServer/model"
 
@@ -27,19 +29,35 @@ func NewDBLayer(cfgname string) (*DBLayer, error) {
 	return &DBLayer{db: db}, err
 }
 
+func hashString(input string) (string, error) {
+	var output string
+
+	inputBytes, err := hex.DecodeString(input)
+
+	if err == nil {
+		hashBytes := sha256.Sum256(inputBytes)
+		output = hex.EncodeToString(hashBytes[:])
+	}
+
+	return output, err
+}
+
 // AddSession inserts a new session into the session store.
 func (l *DBLayer) AddSession(s *model.Session) {
-	l.db.Exec(dbInsertSessionQuery, s.UserID, s.Key)
+	keyHash, _ := hashString(s.Key)
+	l.db.Exec(dbInsertSessionQuery, s.UserID, keyHash)
 }
 
 // RemoveSession removes the corresponding session from the store if it exists.
 func (l *DBLayer) RemoveSession(s *model.Session) {
-	l.db.Exec(dbDeleteSessionQuery, s.UserID, s.Key)
+	keyHash, _ := hashString(s.Key)
+	l.db.Exec(dbDeleteSessionQuery, s.UserID, keyHash)
 }
 
 // IsValid returns true if the session matches a session in the store, otherwise false.
 func (l *DBLayer) IsValid(s *model.Session) bool {
 	var sessionFound bool
-	l.db.QueryRow(dbFindSessionQuery, s.UserID, s.Key).Scan(&sessionFound)
+	keyHash, _ := hashString(s.Key)
+	l.db.QueryRow(dbFindSessionQuery, s.UserID, keyHash).Scan(&sessionFound)
 	return sessionFound
 }
