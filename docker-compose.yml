@@ -1,0 +1,33 @@
+# Docker compose file for SessionServer test stack.
+
+version: "3.7"
+
+services:
+  session-server:
+    image: dangravester/waterlogger-sessionserver:0.1.0
+    ports:
+      - "11000:11000"
+    secrets:
+      - dbconfig.yml
+      - pgpass
+    command: ["-config", "/run/secrets/dbconfig.yml"]
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12.0-alpine
+    secrets:
+      - pgpass
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/pgpass
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+secrets:
+  dbconfig.yml:
+    file: ./sample/secrets/dbconfig.yml
+  pgpass:
+    file: ./sample/secrets/pgpass.txt
+
+volumes:
+  db-data:
