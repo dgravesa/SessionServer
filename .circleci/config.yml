@@ -1,13 +1,68 @@
-version: 2
+version: 2.1
+
+executors:
+  docker_exec:
+    environment:
+      IMAGE_NAME: dangravester/waterlogger-sessionserver
+    docker:
+      - image: circleci/buildpack-deps:stretch
+
 jobs:
-  build:
+  build_test:
     docker:
       - image: circleci/golang:1.13
-
     working_directory: /go/src/bitbucket.org/waterlogger/sessionserver
     steps:
       - checkout
-
-      # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+
+  build_image:
+    executor: docker_exec
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build -t $IMAGE_NAME .
+      - run: docker save -o image.tar $IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+          - ./image.tar
+
+  publish_image:
+    executor: docker_exec
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run: docker load -i /tmp/workspace/image.tar
+      - run: echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+      - run: docker tag $IMAGE_NAME:latest $IMAGE_NAME:${CIRCLE_TAG/v/''}
+      - run: docker push $IMAGE_NAME:${CIRCLE_TAG/v/''}
+
+workflows:
+  version: 2
+
+  integration:
+    jobs:
+      - build_test:
+          filters:
+            tags:
+              only: /.*/
+      - build_image:
+          requires:
+            - build_test
+          filters:
+            tags:
+              only:
+                - /^v[0-9]+([.][0-9]+([.][0-9]+(-[a-zA-Z0-9.-]+)?)?)?$/
+            branches:
+              ignore:
+                - /.*/
+      - publish_image:
+          requires:
+            - build_image
+          filters:
+            tags:
+              only:
+                - /.*/
