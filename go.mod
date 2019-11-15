@@ -1,4 +1,4 @@
-module bitbucket.org/dangravesteam/WaterLogger/SessionServer
+module github.com/dgravesa/SessionServer
 
 go 1.13
 

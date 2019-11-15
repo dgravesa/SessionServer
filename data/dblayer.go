@@ -3,7 +3,7 @@ package data
 import (
 	"database/sql"
 
-	"bitbucket.org/dangravesteam/WaterLogger/SessionServer/model"
+	"github.com/dgravesa/SessionServer/model"
 
 	"bitbucket.org/waterlogger/dbcommon/dbserver"
 )

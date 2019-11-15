@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"bitbucket.org/dangravesteam/WaterLogger/SessionServer/controller"
-	"bitbucket.org/dangravesteam/WaterLogger/SessionServer/data"
-	"bitbucket.org/dangravesteam/WaterLogger/SessionServer/model"
+	"github.com/dgravesa/SessionServer/controller"
+	"github.com/dgravesa/SessionServer/data"
+	"github.com/dgravesa/SessionServer/model"
 
 	_ "github.com/lib/pq"
 )

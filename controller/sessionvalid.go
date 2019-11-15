@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 
-	"bitbucket.org/dangravesteam/WaterLogger/SessionServer/model"
+	"github.com/dgravesa/SessionServer/model"
 )
 
 type sessionValidResponse struct {
