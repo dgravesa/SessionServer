@@ -4,7 +4,8 @@ version: "3.7"
 
 services:
   session-server:
-    image: dangravester/waterlogger-sessionserver:0.1.0
+    build: .
+    image: dangravester/sessionserver
     ports:
       - "11000:11000"
     secrets:
