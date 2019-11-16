@@ -1,0 +1,629 @@
+{
+	"info": {
+		"_postman_id": "46122df4-091f-4583-a1d1-cea97d553d75",
+		"name": "Session Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7547ae47-a3ed-4cad-a857-ba1903885487",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Response user ID matches request user ID\", function () {",
+							"    var expectedUserId = pm.globals.get(\"userId\");",
+							"    pm.expect(jsonData.userId).to.eql(expectedUserId);",
+							"});",
+							"",
+							"pm.test(\"Response session key is not null\", function () {",
+							"    pm.expect(jsonData).to.have.property('key');",
+							"})",
+							"",
+							"pm.globals.set(\"sessionKey\", jsonData.key);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "15c3a2a5-3d4e-4d9a-a0e6-3c65ce310a65",
+						"exec": [
+							"pm.globals.set(\"userId\", 12345);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{userId}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/session",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validation on Valid Session",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9edd7dc0-7872-4348-8e8c-ad1b5b0511d0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "79d2f00f-7f09-45f6-ba28-03a3f29905c5",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Valid returns true\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.isValid).to.eql(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/sessionValid",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"sessionValid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validation with Invalid Session User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9edd7dc0-7872-4348-8e8c-ad1b5b0511d0",
+						"exec": [
+							"pm.globals.set(\"fakeUserId\", 123456);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f595721c-674c-4b82-bced-1c091c48653d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Valid returns false\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.isValid).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{fakeUserId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/sessionValid",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"sessionValid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validation with Invalid Session Key",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9edd7dc0-7872-4348-8e8c-ad1b5b0511d0",
+						"exec": [
+							"pm.globals.set(\"fakeSessionKey\", \"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d26125d0-bc9a-4f24-b7ad-b6a9df537324",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Valid returns false\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.isValid).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{fakeSessionKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/sessionValid",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"sessionValid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validation with Invalid Session Key Format",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9edd7dc0-7872-4348-8e8c-ad1b5b0511d0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6461a0e6-9b50-453f-8a25-2252167db3e2",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"SELECT * FROM user_sessions;\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/sessionValid",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"sessionValid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validation with Unspecified Session Key",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9edd7dc0-7872-4348-8e8c-ad1b5b0511d0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6461a0e6-9b50-453f-8a25-2252167db3e2",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{userId}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/sessionValid",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"sessionValid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Session with Incorrect User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2c4996c7-94ad-417d-83ef-01b8caa3165c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{fakeUserId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/session",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validation on Valid Session After Attempted Deletion",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9edd7dc0-7872-4348-8e8c-ad1b5b0511d0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "79d2f00f-7f09-45f6-ba28-03a3f29905c5",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Valid returns true\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.isValid).to.eql(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/sessionValid",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"sessionValid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Session",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2c4996c7-94ad-417d-83ef-01b8caa3165c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/session",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validation on Deleted Session",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9edd7dc0-7872-4348-8e8c-ad1b5b0511d0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "79d2f00f-7f09-45f6-ba28-03a3f29905c5",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Valid returns false\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.isValid).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}/sessionValid",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"sessionValid"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
