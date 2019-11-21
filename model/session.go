@@ -1,7 +1,9 @@
 package model
 
 import (
-	"io"
+	"fmt"
+	"net/http"
+	"strconv"
 )
 
 // Session maintains a user login instance.
@@ -20,15 +22,34 @@ func NewSession(uid uint64) Session {
 	return s
 }
 
-// ParseSession constructs a session from an HTTP request.
-func ParseSession(r io.Reader) (Session, error) {
-	var s Session
+// IDFromHeader gets the "id" from an HTTP header's query parameters.
+func IDFromHeader(h http.Header) (uint64, error) {
+	idStr := h.Get("id")
+	return strconv.ParseUint(idStr, 10, 64)
+}
 
-	var sj SessionJSON
-	if err := sj.DecodeFrom(r); err != nil {
+// SessionKeyFromHeader gets the session "key" from an HTTP header's query parameters.
+func SessionKeyFromHeader(h http.Header) (string, error) {
+	var key string
+
+	if key = h.Get("key"); keycheck(key) != nil {
+		return "", fmt.Errorf("session key: invalid format on query parameter")
+	}
+
+	return key, nil
+}
+
+// SessionFromHeader constructs a session from an HTTP header's query parameters.
+func SessionFromHeader(h http.Header) (Session, error) {
+	var s Session
+	var err error
+
+	if s.UserID, err = IDFromHeader(h); err != nil {
+		return s, err
+	} else if s.Key, err = SessionKeyFromHeader(h); err != nil {
 		return s, err
 	}
 
-	s = sj.ToSession()
+	s.KeyHash = hashkey(s.Key)
 	return s, nil
 }

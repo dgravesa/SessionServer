@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 
 	"github.com/dgravesa/SessionServer/model"
@@ -19,9 +18,7 @@ func makeSessionValidResponse(session model.Session) sessionValidResponse {
 }
 
 func validFunc(w http.ResponseWriter, r *http.Request) {
-	const maxBodySize = 2048
-	limitBody := io.LimitReader(r.Body, maxBodySize)
-	session, err := model.ParseSession(limitBody)
+	session, err := model.SessionFromHeader(r.Header)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

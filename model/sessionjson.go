@@ -51,11 +51,11 @@ func (sj *SessionJSON) DecodeFrom(r io.Reader) error {
 	if err := d.Decode(&nillable); err != nil {
 		return err
 	} else if nillable.UserID == nil {
-		return fmt.Errorf("Session: missing \"userId\" in JSON")
+		return fmt.Errorf("session: missing \"userId\" in JSON")
 	} else if nillable.Key == nil {
-		return fmt.Errorf("Session: missing \"key\" in JSON")
-	} else if !keycheck(*nillable.Key) {
-		return fmt.Errorf("Session: invalid key format")
+		return fmt.Errorf("session: missing \"key\" in JSON")
+	} else if err = keycheck(*nillable.Key); err != nil {
+		return err
 	}
 
 	sj.UserID = *nillable.UserID
