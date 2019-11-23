@@ -48,15 +48,14 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
+						"key": "id",
+						"value": "{{userId}}",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{userId}}\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -114,15 +113,19 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
+						"key": "id",
+						"value": "{{userId}}",
+						"type": "text"
+					},
+					{
+						"key": "key",
+						"value": "{{sessionKey}}",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -180,15 +183,19 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+						"key": "id",
+						"value": "{{fakeUserId}}",
+						"type": "text"
+					},
+					{
+						"key": "key",
+						"value": "{{sessionKey}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{fakeUserId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -246,15 +253,19 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+						"key": "id",
+						"value": "{{userId}}",
+						"type": "text"
+					},
+					{
+						"key": "key",
+						"value": "{{fakeSessionKey}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{fakeSessionKey}}\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -307,15 +318,19 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+						"key": "id",
+						"value": "{{userId}}",
+						"type": "text"
+					},
+					{
+						"key": "key",
+						"value": "SELECT * FROM user_sessions;",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"SELECT * FROM user_sessions;\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -368,15 +383,14 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+						"key": "id",
+						"value": "{{userId}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{userId}}\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -416,15 +430,19 @@
 				"method": "DELETE",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
+						"key": "id",
+						"value": "{{fakeUserId}}",
+						"type": "text"
+					},
+					{
+						"key": "key",
+						"value": "{{sessionKey}}",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{fakeUserId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -482,15 +500,19 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
+						"key": "id",
+						"value": "{{userId}}",
+						"type": "text"
+					},
+					{
+						"key": "key",
+						"value": "{{sessionKey}}",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -530,15 +552,19 @@
 				"method": "DELETE",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+						"key": "id",
+						"value": "{{userId}}",
+						"type": "text"
+					},
+					{
+						"key": "key",
+						"value": "{{sessionKey}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -596,15 +622,19 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
+						"key": "id",
+						"value": "{{userId}}",
+						"type": "text"
+					},
+					{
+						"key": "key",
+						"value": "{{sessionKey}}",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userId\": {{userId}},\n\t\"key\": \"{{sessionKey}}\"\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
